@@ -69,4 +69,33 @@ router.delete('/:id', async (req, res, next) => {
     }
 })
 
+router.get('/:id/orderTotal', async (req, res, next) => {
+    try{
+        const order = await Orders.findById(req.params.id).populate('items.product', 'prod_name prod_price');
+
+        if (!order) {
+            return res.status(404).json({message: 'Order not found'})
+        }
+
+        let total=0
+        order.items.forEach(item =>{
+            if (item.product){
+                total += item.product.prod_price * item.quantity;
+            }
+        })
+        order.priceTotal = total;
+        await order.save();
+        
+        res.json({
+            orderNumber: order.orderNumber,
+            items: order.items,
+            totalPrice: total,
+            currency: 'THB'
+        });
+
+    } catch(err){
+        next(err)
+    }
+})
+
 module.exports = router;

@@ -10,6 +10,7 @@ const OrderSchema = new mongoose.Schema({
         enum: ['Hot', 'Iced', 'Frappe']
         } 
     }],
+    priceTotal: Number,
     status: {
         type: String,
         enum: ['Paid', 'Not yet Paid'],
