@@ -1,28 +1,20 @@
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
-const products = require('./routes/productsRout');
-const orders = require('./routes/orderRout');
-const allTotal = require('./routes/allTotal');
+var app = express();
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect('mongodb+srv://adminOwl:owl01@cluster0.tafm6pe.mongodb.net/')
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.log(err))
+// เชื่อม MongoDB โดยใช้ค่าใน .env
+mongoose.connect(process.env.MONGODB_URL)
+.then(() => console.log('✅ MongoDB connected'))
+.catch((err) => console.error('❌ MongoDB connection error:', err));
 
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
-var app = express();
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+const allTotal = require('./routes/allTotal');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -30,26 +22,30 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/products', products);
-app.use('/orders', orders);
-app.use('/allTotal', allTotal);
+
+app.use('/', allTotal);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+
+// error handler
+app.use(function (err, req, res, next) {
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message,
+    error: req.app.get('env') === 'development' ? err : {}
+  });
 });
+
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`🚀 Server is running at http://localhost:${port}`);
+});
+
 
 module.exports = app;

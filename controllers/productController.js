@@ -1,8 +1,13 @@
-const product = require('../models/productModel.js');
+const productModel = require('../models/productModel.js');
+const counterModel = require('../models/counterModel.js');
+
 
 exports.getAllProducts = async (req, res, next) => {
     try {
-        const products = await product.find();
+        const products = await productModel.find();
+        if (!products) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
         res.json(products);
     } catch (err) {
         next(err);
@@ -11,7 +16,7 @@ exports.getAllProducts = async (req, res, next) => {
 
 exports.getProductById = async (req, res, next) => {
     try {
-        const productItem = await product.findById(req.params.id);
+        const productItem = await productModel.findById(req.params.id);
         if (!productItem) {
             return res.status(404).json({ message: 'Product not found' });
         }
@@ -21,10 +26,27 @@ exports.getProductById = async (req, res, next) => {
     }
 }
 
+
+
 exports.createProduct = async (req, res, next) => {
     try {
-        const newProduct = await product.create(req.body);
-        res.json(newProduct);
+        const count = await counterModel.findOneAndUpdate(
+            { name: 'product' },
+            { $inc: { value: 1 } },
+            { new: true, upsert: true }
+        );
+
+        // สร้าง product ใหม่โดยใช้ id จาก counter
+        const newProduct = await productModel.create({
+            id: count.value,
+            prod_name: req.body.prod_name,
+            prod_price: req.body.prod_price,
+            prod_type: req.body.prod_type
+        });
+
+        const products = await productModel.find();
+
+        res.json(products);
     } catch (err) {
         next(err);
     }
@@ -33,8 +55,8 @@ exports.createProduct = async (req, res, next) => {
 exports.updateProduct = async (req, res, next) => {
     const { id } = req.params;
     try {
-        await product.findByIdAndUpdate(id, req.body);
-        const updatedProducts = await product.find();
+        await productModel.findByIdAndUpdate(id, req.body);
+        const updatedProducts = await productModel.find();
         res.json(updatedProducts);
     } catch (err) {
         next(err);
@@ -44,8 +66,8 @@ exports.updateProduct = async (req, res, next) => {
 exports.deleteProduct = async (req, res, next) => {
     const { id } = req.params;
     try {
-        await product.findByIdAndDelete(id);
-        const updatedProducts = await product.find();
+        await productModel.findByIdAndDelete(id);
+        const updatedProducts = await productModel.find();
         res.json(updatedProducts);
     } catch (err) {
         next(err);

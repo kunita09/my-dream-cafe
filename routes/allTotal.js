@@ -2,16 +2,23 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 
-const orders = require('../controllers/orderController.js');
-const allTotal = require('../controllers/allTotalController.js'); 
+const newOrder = require('../controllers/newOrderController.js');
+const orders = require('../controllers/ordersController.js'); 
 const product = require('../controllers/productController.js');
 
 
-router.get('/allTotal', allTotal.getAllTotal);
-router.delete('/resetOrders', allTotal.resetOrders);
+router.get('/allTotal', orders.getAllTotal);
+router.delete('/resetOrders', orders.resetOrders);
 
-router.get('/allOrders', orders.getAllOrders);
-router.post('/createOrder', orders.creteOrder);
-router.delete('/deleteOrder/:id', orders.deleteOrder);
+router.patch('/paymentOrder/:id', newOrder.paymentOrder);
+router.post('/createOrder', newOrder.createOrder);
+router.delete('/resetOrder/:id', newOrder.resetOrder);
 
 router.get('/allProducts', product.getAllProducts);
+router.get('/product/:id', product.getProductById);
+router.post('/createProduct', product.createProduct);
+router.put('/updateProduct/:id', product.updateProduct);
+router.delete('/deleteProduct/:id', product.deleteProduct);
+
+
+module.exports = router;
