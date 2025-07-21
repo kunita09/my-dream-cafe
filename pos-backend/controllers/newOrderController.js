@@ -1,5 +1,6 @@
 const orderModel = require('../models/orderModel.js');
 const counter = require('../models/counterModel.js');
+const Product = require('../models/productModel.js');
 
 
 exports.paymentOrder = async (req, res, next) => {
@@ -44,25 +45,41 @@ exports.createOrder = async (req, res, next) => {
         const items = req.body.items;
 
         let total = 0;
-        for(let item of items){
-            const price = Number(item.price);
-            const quantity = Number(item.quantity);
+        const orderItems = [];
 
-            if (isNaN(price) || isNaN(quantity)) {
-                return res.status(400).json({ message: 'Invalid price or quantity', item });
+        for(let item of items){
+            const { prod_name, quantity } = item;
+            const qty =Number(quantity);
+            if (!prod_name || isNaN(qty) || qty <= 0){
+              return res.status(404).json({ message: 'จำนวนไม่ถูกต้อง'});
             }
 
-            total += price * quantity;
+            const product = await Product.findOne({ prod_name: prod_name });
+            if (!product) {
+              return res.status(400).json({ message: `ไม่พบสินค้า: ${prod_name}` });
+            }
+            
+            const subtotal = product.prod_price * qty; 
+            total += subtotal;
+
+            orderItems.push({
+              id: product._id.toString(),
+              name: product.prod_name,
+              price: product.prod_price,
+              quantity: qty
+            });
         }
+
+
         const counterValue = await counter.findOneAndUpdate(
             { name: 'order' },
             { $inc: { value: 1 } },
             { new: true, upsert: true }
         );
-
+        
         const newOrder = new orderModel({
             orderNumber: counterValue.value,
-            items: items,
+            items: orderItems,
             priceTotal: total,
             status: 'ยังไม่ได้ชำระเงิน',
             create_at: new Date()

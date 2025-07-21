@@ -1,21 +1,25 @@
 <template>
   <div>
-    <!-- ปุ่มไปหน้า ManageOrder -->
-    <div style="margin-bottom: 1rem;">
-      <button type="button" @click="goManageOrder">➡ ไปหน้าออเดอร์ (ManageOrder)</button>
-    </div>
-    <div style="margin-bottom: 1rem;">
-      <button type="button" @click="goNewOrder">➡ ไปหน้าออเดอร์ (newOrder)</button>
+    <div class="nev">
+      <div >
+        <button type="button" >จัดการสินค้า</button>
+      </div>
+      <div >
+        <button type="button" @click="goManageOrder">จัดการออเดอร์</button>
+      </div>
+      <div >
+        <button type="button" @click="goNewOrder">เพิ่มออร์เดอร์</button>
+      </div>
     </div>
 
 
     <h2>📦 จัดการสินค้า</h2>
 
     <!-- Form เพิ่ม / แก้ไข -->
-    <form @submit.prevent="handleSubmit">
-      <input v-model="form.prod_name" placeholder="ชื่อเมนู" required />
-      <input v-model.number="form.prod_price" type="number" placeholder="ราคา" required />
-      <select v-model="form.prod_type" required>
+    <form @submit.prevent="handleSubmit" class="formAddProduct">
+      <input v-model="form.prod_name" placeholder="ชื่อเมนู" required class="productName"/>
+      <input v-model.number="form.prod_price" type="number" placeholder="ราคา" required class="productPrice"/>
+      <select v-model="form.prod_type" required class="productType">
         <option disabled value=""> ประเภทสินค้า </option>
         <option value="เบเกอรี่">เบเกอรี่</option>
         <option value="เครื่องดื่ม">เครื่องดื่ม</option>
@@ -29,9 +33,9 @@
     <table border="1">
       <thead>
         <tr>
-          <th>ชื่อ</th>
-          <th>ราคา</th>
-          <th>ประเภท</th>
+          <th class="col-name">ชื่อ</th>
+          <th class="col-price">ราคา</th>
+          <th class="col-type">ประเภท</th>
           <th>การจัดการ</th>
         </tr>
       </thead>

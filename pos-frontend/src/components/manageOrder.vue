@@ -1,10 +1,15 @@
 <template>
   <div>
-    <div style="margin-bottom: 1rem;">
-      <button type="button" @click="goManageProduct">➡ ไปหน้าออเดอร์ (ManageProduct)</button>
-    </div>
-    <div style="margin-bottom: 1rem;">
-      <button type="button" @click="goNewOrder">➡ ไปหน้าออเดอร์ (NewOrder)</button>
+    <div class="nev">
+      <div >
+        <button type="button" @click="goManageProduct">จัดการสินค้า</button>
+      </div>
+      <div >
+        <button type="button" >จัดการออเดอร์</button>
+      </div>
+      <div >
+        <button type="button" @click="goNewOrder">เพิ่มออร์เดอร์</button>
+      </div>
     </div>
 
 
@@ -17,24 +22,18 @@
     <table border="1" cellpadding="8">
       <thead>
         <tr>
-          <th>หมายเลขคำสั่งซื้อ</th>
+          <th>ออร์เดอร์</th>
           <th>วันที่</th>
           <th>จำนวนเงิน</th>
-          <th>รายละเอียด</th>
+          <th>สถานะ</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="order in orders" :key="order._id">
-          <td>{{ order.id }}</td>
-          <td>{{ formatDate(order.createdAt) }}</td>
+          <td>{{ order.orderNumber }}</td>
+          <td>{{ formatDate(order.create_at) }}</td>
           <td>{{ order.priceTotal.toLocaleString() || '0' }} {{ currency }}</td>
-          <td>
-            <ul>
-              <li v-for="item in order.items" :key="item.prod_name">
-                {{ item.prod_name }} x{{ item.quantity }}
-              </li>
-            </ul>
-          </td>
+          <td>{{ order.status }}</td>
         </tr>
       </tbody>
     </table>
@@ -56,7 +55,7 @@ const currency = ref('THB')
 
 const loadOrders = async () => {
   try {
-    const res = await axios.get('/getAllTotal')
+    const res = await axios.get('/allTotal')
     orders.value = res.data.orders
     totalAllDay.value = res.data.totalAllDay
     currency.value = res.data.currency

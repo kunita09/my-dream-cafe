@@ -26,8 +26,8 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  /* min-width: 320px;
+  min-height: 100vh; */
 }
 
 h1 {
@@ -39,12 +39,12 @@ button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
+  font-size: 20px;
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: none;
 }
 button:hover {
   border-color: #646cff;
@@ -59,9 +59,9 @@ button:focus-visible {
 }
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 1280px;
+  margin: 20px auto;
+  /* padding: 2rem; */
   text-align: center;
 }
 
@@ -77,3 +77,104 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: rgb(255, 135, 135);
+  padding: 2rem;
+  border-radius: 12px;
+  width: 300px;
+}
+
+.modal-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.15s ease-out;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+
+
+.nev {
+  display: flex;
+  gap: 1rem; /* ระยะห่างระหว่างปุ่ม */
+  justify-content: center; /* ให้เรียงปุ่มตรงกลางแนวนอน */
+  /* margin-bottom: 1rem; */
+}
+.nev div{
+  margin: 0 20px;
+  
+}
+.nev div button {
+  padding: 50px;
+  width: 400px;
+}
+
+.formAddOrder .nameProduct{
+  padding: 10px;
+  width: 600px;
+}
+.formAddOrder .qtyProduct{
+  padding: 10px;
+  width: 100px;
+}
+.formAddOrder button{
+  padding: 10px;
+  width: 80px;
+  font-size: 15px;
+  margin: 10px;
+}
+
+.formAddProduct .productName{
+  padding: 10px;
+  width: 500px;
+}
+.formAddProduct .productPrice{
+  padding: 10px;
+  width: 100px;
+}
+.formAddProduct .productType{
+  padding: 10px;
+  width: 150px;
+}
+.formAddProduct button{
+  padding: 10px;
+  width: 80px;
+  font-size: 15px;
+  margin: 10px;
+}
+
+
+table {
+  margin: 2rem auto;
+  border-collapse: collapse;
+  width: auto;
+  text-align: center;
+}
+
+th, td {
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+
+thead {
+  background-color: #262626;
+  font-weight: bold;
+}
+
