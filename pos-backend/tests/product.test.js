@@ -1,8 +1,6 @@
 const productController = require('../controllers/productController');
-const newOrderController = require('../controllers/newOrderController')
 const productModel = require('../models/productModel');
 const counterModel = require('../models/counterModel');
-const orderModel = require('../models/orderModel');
 
 jest.mock('../models/productModel');
 jest.mock('../models/counterModel');
